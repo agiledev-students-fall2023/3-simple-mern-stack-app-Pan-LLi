@@ -21,7 +21,8 @@ mongoose
 // load the dataabase models we want to deal with
 const { Message } = require('./models/Message')
 const { User } = require('./models/User')
-
+const { About } = require('./models/AboutMe')
+console.log("message  her ",About)
 // a route to handle fetching all messages
 app.get('/messages', async (req, res) => {
   // load all messages from database
@@ -77,6 +78,25 @@ app.post('/messages/save', async (req, res) => {
     })
   }
 })
+
+app.get('/about', async (req, res) => {
+  try {
+    // Fetch the data from the database
+    const aboutData = await About.find({}); // assuming there's only one document for about-me data
+
+    // Send the fetched data as response
+    res.json({aboutData
+    });
+    console.log(aboutData[0])
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({
+      error: err,
+      status: 'failed to retrieve about information from the database',
+    });
+  }
+});
+
 
 // export the express app we created to make it available to other modules
 module.exports = app // CommonJS export style!

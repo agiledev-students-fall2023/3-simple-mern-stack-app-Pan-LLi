@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import './Home.css'
 import './About.css'
 /**
@@ -6,24 +8,37 @@ import './About.css'
  * @param {*} param0 an object holding any props passed to this component from its parent component
  * @returns The contents of this component, in JSX form.
  */
-const About = props => {
-  return (
-    <>
-      <h1>Welcome to my first React App</h1>
 
-      <img src="../MyPhoto.jpg" alt="Descriptive Alt Text" />
-      <h3>My Photo</h3>
-      <p>My name is Pan Li. I'm a senior at NYU, and I major in Computer Science</p>
-      <p>
-      
-        Click here if you want to return to <Link to="/">Home</Link>.
-      </p>
-    </>
-  )
-}
+const About = () => {
+          const [aboutData, setAboutData] = useState([]);
+          const [loading, setLoading] = useState(true);
+          useEffect(() => {
+          axios
+              .get(`${process.env.REACT_APP_SERVER_HOSTNAME}/about`)
+              .then(response => {
+                    console.log(response.data);
+                    console.log(response.data.aboutData[0])
+                    setAboutData(response.data.aboutData);
+                    setLoading(false);
+          }
+                    
+                    )
+              .catch(error => console.error(error));
+          }, []);
 
-// make this component available to be imported into any other file
+          if (loading) {
+                    return <p>Loading...</p>;
+          }
 
-
-// make this component available to be imported into any other file
+          return (
+            <>
+              <article className="Message-article">
+                <img src = {aboutData[0].imageUrl}></img>
+               <p>{aboutData[0].about}</p>
+             
+              </article>
+            </>
+          )
+        }
+   
 export default About
